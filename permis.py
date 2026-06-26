@@ -543,6 +543,91 @@ if df is not None:
 
 else:
     st.info("💡 Aucun dataset chargé. Générez d'abord le fichier dataset_permis_confiance.csv")
+    
+# STATISTIQUES SIMPLES
+
+st.divider()
+st.header("📈 Statistiques du dataset")
+
+df = charger_dataset()
+
+if df is not None:
+    # --- STATISTIQUES GLOBALES ---
+    col_s1, col_s2, col_s3 = st.columns(3)
+    
+    with col_s1:
+        st.metric(
+            "📊 Nombre total de demandes",
+            len(df)
+        )
+    
+    with col_s2:
+        nb_acceptes = df[df['decision'] == 1].shape[0]
+        taux_acceptation = (nb_acceptes / len(df)) * 100
+        st.metric(
+            "✅ Taux d'acceptation",
+            f"{taux_acceptation:.1f}%",
+            delta=f"{nb_acceptes} acceptés"
+        )
+    
+    with col_s3:
+        nb_refuses = df[df['decision'] == 0].shape[0]
+        st.metric(
+            "❌ Taux de refus",
+            f"{(nb_refuses / len(df)) * 100:.1f}%",
+            delta=f"{nb_refuses} refusés",
+            delta_color="inverse"
+        )
+    
+    st.divider()
+    
+    # --- COMPARAISON ACCEPTÉS / REFUSÉS ---
+    st.subheader("📊 Comparaison Acceptés vs Refusés")
+    
+    # Création des données pour le graphique
+    col_c1, col_c2 = st.columns(2)
+    
+    with col_c1:
+        # Affichage des nombres
+        st.markdown(f"""
+        | Statut | Nombre | Pourcentage |
+        |--------|--------|-------------|
+        | ✅ Acceptés | **{nb_acceptes}** | **{taux_acceptation:.1f}%** |
+        | ❌ Refusés | **{nb_refuses}** | **{(nb_refuses/len(df))*100:.1f}%** |
+        | **Total** | **{len(df)}** | **100%** |
+        """)
+    
+    with col_c2:
+        # Graphique à barres
+        chart_data = pd.DataFrame({
+            'Statut': ['✅ Acceptés', '❌ Refusés'],
+            'Nombre': [nb_acceptes, nb_refuses]
+        })
+        st.bar_chart(chart_data.set_index('Statut'), use_container_width=True)
+    
+    st.divider()
+    # Statistiques supplémentaires
+    age_moyen_acceptes = df[df['decision'] == 1]['age'].mean()
+    age_moyen_refuses = df[df['decision'] == 0]['age'].mean()
+    anciennete_moyenne = df['anciennete_permis'].mean()
+
+    # Afficher en plus
+    st.metric("📅 Âge moyen acceptés", f"{age_moyen_acceptes:.1f} ans")
+    st.metric("📅 Âge moyen refusés", f"{age_moyen_refuses:.1f} ans")
+    st.metric("🪪 Ancienneté moyenne", f"{anciennete_moyenne:.1f} ans")
+    # --- RÉPARTITION PAR PROVINCE (optionnel) ---
+    with st.expander("📍 Voir la répartition par province"):
+        df_province = df.groupby('province_residence').agg(
+            Total=('decision', 'count'),
+            Acceptes=('decision', lambda x: (x == 1).sum()),
+            Taux_acceptation=('decision', lambda x: f"{(x.mean() * 100):.1f}%")
+        ).reset_index()
+        df_province.columns = ['Province', 'Total', 'Acceptés', "Taux d'acceptation"]
+        st.dataframe(df_province, use_container_width=True)
+
+else:
+    st.info("💡 Aucun dataset chargé. Générez d'abord le fichier dataset_permis_confiance.csv")
+    
 # --- PIED DE PAGE ---
 st.divider()
 st.caption("🚖 Prototype de démonstration - Données fictives - Non contractuel")
