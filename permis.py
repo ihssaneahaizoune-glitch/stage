@@ -450,12 +450,6 @@ with st.sidebar:
         st.session_state.nb_tests = 0
         st.rerun()
 
-# --- PIED DE PAGE ---
-st.divider()
-st.caption("🚖 Prototype de démonstration - Données fictives - Non contractuel")
-st.caption("🔐 Aucune donnée personnelle n'est stockée")
-st.caption(f"🕐 {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-
 # --- CHARGEMENT DU DATASET CSV ---
 @st.cache_data
 def charger_dataset():
@@ -549,3 +543,8 @@ if df is not None:
 
 else:
     st.info("💡 Aucun dataset chargé. Générez d'abord le fichier dataset_permis_confiance.csv")
+# --- PIED DE PAGE ---
+st.divider()
+st.caption("🚖 Prototype de démonstration - Données fictives - Non contractuel")
+st.caption("🔐 Aucune donnée personnelle n'est stockée")
+st.caption(f"🕐 {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
