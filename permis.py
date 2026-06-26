@@ -1,6 +1,7 @@
 # permis.py - Formulaire utilisateur avec validation des champs
 
 import streamlit as st
+import pandas as pd
 from datetime import datetime, timedelta
 import random
 
@@ -454,3 +455,97 @@ st.divider()
 st.caption("🚖 Prototype de démonstration - Données fictives - Non contractuel")
 st.caption("🔐 Aucune donnée personnelle n'est stockée")
 st.caption(f"🕐 {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+
+# --- CHARGEMENT DU DATASET CSV ---
+@st.cache_data
+def charger_dataset():
+    """
+    Charge le dataset CSV avec mise en cache
+    """
+    try:
+        df = pd.read_csv("dataset_permis_confiance.csv", encoding='utf-8')
+        return df
+    except FileNotFoundError:
+        st.warning("⚠️ Fichier 'dataset_permis_confiance.csv' non trouvé")
+        return None
+    except Exception as e:
+        st.error(f"❌ Erreur lors du chargement : {e}")
+        return None
+
+# --- AFFICHAGE DU DATASET ---
+st.divider()
+st.header("📊 Visualisation du dataset")
+
+df = charger_dataset()
+
+if df is not None:
+    # --- FILTRES ---
+    st.subheader("🔍 Filtrer les données")
+    
+    col_f1, col_f2, col_f3, col_f4 = st.columns(4)
+    
+    with col_f1:
+        decision_filter = st.multiselect(
+            "Décision",
+            options=[1, 0],
+            format_func=lambda x: "✅ Accordé" if x == 1 else "❌ Refusé",
+            default=[1, 0]
+        )
+    
+    with col_f2:
+        provinces = sorted(df['province_residence'].unique())
+        province_filter = st.multiselect(
+            "Province de résidence",
+            options=provinces,
+            default=provinces[:3] if len(provinces) > 3 else provinces
+        )
+    
+    with col_f3:
+        age_min = int(df['age'].min())
+        age_max = int(df['age'].max())
+        age_range = st.slider(
+            "Tranche d'âge",
+            min_value=age_min,
+            max_value=age_max,
+            value=(age_min, age_max)
+        )
+    
+    with col_f4:
+        casier_filter = st.multiselect(
+            "Casier judiciaire",
+            options=[1, 0],
+            format_func=lambda x: "✅ Vierge" if x == 1 else "❌ Non vierge",
+            default=[1, 0]
+        )
+    
+    # --- APPLICATION DES FILTRES ---
+    df_filtre = df[
+        (df['decision'].isin(decision_filter)) &
+        (df['province_residence'].isin(province_filter)) &
+        (df['age'].between(age_range[0], age_range[1])) &
+        (df['casier_vierge'].isin(casier_filter))
+    ]
+    
+    st.divider()
+    
+    # --- AFFICHAGE DES DONNÉES ---
+    st.subheader(f"📋 Données ({len(df_filtre)} lignes)")
+    
+    st.dataframe(
+        df_filtre,
+        use_container_width=True,
+        height=400
+    )
+    
+    # --- BOUTON DE TÉLÉCHARGEMENT ---
+    csv = df_filtre.to_csv(index=False).encode('utf-8')
+    st.download_button(
+        label="📥 Télécharger le CSV filtré",
+        data=csv,
+        file_name="dataset_filtre.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
+
+else:
+    st.info("💡 Aucun dataset chargé. Générez d'abord le fichier dataset_permis_confiance.csv")
