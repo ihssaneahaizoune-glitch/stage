@@ -4,6 +4,8 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 import random
+import plotly.express as px
+import plotly.graph_objects as go
 
 # --- Configuration de la page ---
 st.set_page_config(
@@ -606,6 +608,152 @@ if df is not None:
         st.bar_chart(chart_data.set_index('Statut'), use_container_width=True)
     
     st.divider()
+    # ============================================
+# GRAPHIQUES - À AJOUTER DANS LA SECTION STATISTIQUES
+# ============================================
+
+# --- IMPORT DE PLOTLY ---
+import plotly.express as px
+import plotly.graph_objects as go
+
+# --- CRÉATION DES DONNÉES ---
+if df is not None:
+    nb_acceptes = df[df['decision'] == 1].shape[0]
+    nb_refuses = df[df['decision'] == 0].shape[0]
+    taux_acceptation = (nb_acceptes / len(df)) * 100
+    
+    st.divider()
+    st.subheader("📊 Visualisation graphique")
+    
+    # --- COLONNES POUR LES 2 GRAPHIQUES ---
+    col_g1, col_g2 = st.columns(2)
+    
+    # --- GRAPHIQUE 1 : BAR CHART ---
+    with col_g1:
+        st.markdown("#### 📊 Bar Chart")
+        
+        # Création du dataframe pour le graphique
+        df_bar = pd.DataFrame({
+            'Statut': ['✅ Acceptés', '❌ Refusés'],
+            'Nombre': [nb_acceptes, nb_refuses],
+            'Pourcentage': [taux_acceptation, 100 - taux_acceptation]
+        })
+        
+        # Création du bar chart avec Plotly
+        fig_bar = px.bar(
+            df_bar,
+            x='Statut',
+            y='Nombre',
+            text='Nombre',
+            color='Statut',
+            color_discrete_map={
+                '✅ Acceptés': '#4CAF50',
+                '❌ Refusés': '#FF4444'
+            },
+            title=f'Total : {len(df)} demandes - Taux d\'acceptation : {taux_acceptation:.1f}%',
+            labels={'Nombre': 'Nombre de demandes', 'Statut': 'Décision'}
+        )
+        
+        # Personnalisation du bar chart
+        fig_bar.update_traces(
+            textposition='outside',
+            textfont_size=16,
+            marker_line_color='white',
+            marker_line_width=2
+        )
+        fig_bar.update_layout(
+            showlegend=False,
+            height=400,
+            yaxis=dict(
+                title='Nombre de demandes',
+                gridcolor='lightgray'
+            ),
+            plot_bgcolor='white',
+            title_font_size=16
+        )
+        
+        st.plotly_chart(fig_bar, use_container_width=True)
+    
+    # --- GRAPHIQUE 2 : PIE CHART ---
+    with col_g2:
+        st.markdown("#### 🥧 Pie Chart")
+        
+        # Création du dataframe pour le graphique
+        df_pie = pd.DataFrame({
+            'Statut': ['✅ Acceptés', '❌ Refusés'],
+            'Nombre': [nb_acceptes, nb_refuses]
+        })
+        
+        # Création du pie chart avec Plotly
+        fig_pie = px.pie(
+            df_pie,
+            values='Nombre',
+            names='Statut',
+            title=f'Répartition des décisions',
+            color='Statut',
+            color_discrete_map={
+                '✅ Acceptés': '#4CAF50',
+                '❌ Refusés': '#FF4444'
+            },
+            hole=0.3  # Donut chart
+        )
+        
+        # Personnalisation du pie chart
+        fig_pie.update_traces(
+            textposition='inside',
+            textinfo='percent+label',
+            pull=[0.05, 0],  # Légèrement séparer la première tranche
+            marker=dict(line=dict(color='white', width=2))
+        )
+        fig_pie.update_layout(
+            height=400,
+            showlegend=True,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.2,
+                xanchor="center",
+                x=0.5
+            ),
+            title_font_size=16
+        )
+        
+        st.plotly_chart(fig_pie, use_container_width=True)
+    
+    # --- GRAPHIQUE 3 : BAR CHART HORIZONTAL (optionnel) ---
+    with st.expander("📊 Voir le graphique horizontal"):
+        st.markdown("#### Bar Chart Horizontal")
+        
+        fig_hbar = go.Figure(data=[
+            go.Bar(
+                x=[nb_acceptes],
+                y=['✅ Acceptés'],
+                orientation='h',
+                marker_color='#4CAF50',
+                text=[f'{nb_acceptes} ({taux_acceptation:.1f}%)'],
+                textposition='outside'
+            ),
+            go.Bar(
+                x=[nb_refuses],
+                y=['❌ Refusés'],
+                orientation='h',
+                marker_color='#FF4444',
+                text=[f'{nb_refuses} ({(100-taux_acceptation):.1f}%)'],
+                textposition='outside'
+            )
+        ])
+        
+        fig_hbar.update_layout(
+            title='Nombre de demandes par décision',
+            height=300,
+            xaxis=dict(title='Nombre de demandes'),
+            yaxis=dict(title='Décision'),
+            plot_bgcolor='white',
+            showlegend=False
+        )
+        
+        st.plotly_chart(fig_hbar, use_container_width=True)
+
     # Statistiques supplémentaires
     age_moyen_acceptes = df[df['decision'] == 1]['age'].mean()
     age_moyen_refuses = df[df['decision'] == 0]['age'].mean()
