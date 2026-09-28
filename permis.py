@@ -10,20 +10,19 @@ import plotly.graph_objects as go
 # --- Configuration de la page ---
 st.set_page_config(
     page_title="Permis de Confiance Taxi",
-    page_icon="🚖",
     layout="centered"
 )
 
 # --- Titre principal ---
-st.title("🚖 Demande de Permis de Confiance")
+st.title("Demande de Permis de Confiance")
 st.subheader("Formulaire d'évaluation du chauffeur")
 st.divider()
 
 # --- BARRE LATÉRALE ---
 with st.sidebar:
-    st.header("📋 Informations")
+    st.header(" Informations")
     st.info("Remplissez tous les champs du formulaire pour vérifier l'éligibilité.")
-    st.caption("🔒 Aucune donnée réelle n'est stockée")
+    st.caption("Aucune donnée réelle n'est stockée")
 
 # --- INITIALISATION DES VARIABLES DE SESSION ---
 if 'form_valid' not in st.session_state:
@@ -32,17 +31,17 @@ if 'erreurs' not in st.session_state:
     st.session_state.erreurs = []
 
 # --- FORMULAIRE PRINCIPAL ---
-st.markdown("### 📝 Renseignez les informations du chauffeur")
+st.markdown("### Renseignez les informations du chauffeur")
 
 # Création du formulaire
 with st.form("formulaire_permis"):
     
     # --- 1. CHAMP PROVINCE ---
-    st.markdown("#### 📍 1. Province")
+    st.markdown("#### 1. Province")
     
     # Message d'erreur pour la province
     if 'erreur_province' in st.session_state and not st.session_state.form_valid:
-        st.error("⚠️ Veuillez sélectionner une province valide")
+        st.error("Veuillez sélectionner une province valide")
     
     col1, col2 = st.columns(2)
     
@@ -60,14 +59,14 @@ with st.form("formulaire_permis"):
             help="Province où le chauffeur souhaite exercer"
         )
     
-    st.caption("⚠️ La province de résidence doit être identique à la province demandée")
+    st.caption("La province de résidence doit être identique à la province demandée")
     
     # --- 2. CHAMP ÂGE ---
-    st.markdown("#### 🎂 2. Âge")
+    st.markdown("#### 2. Âge")
     
     # Message d'erreur pour l'âge
     if 'erreur_age' in st.session_state and not st.session_state.form_valid:
-        st.error("⚠️ L'âge doit être compris entre 18 et 75 ans")
+        st.error("L'âge doit être compris entre 18 et 75 ans")
     
     age = st.number_input(
         "Âge du chauffeur *",
@@ -80,16 +79,16 @@ with st.form("formulaire_permis"):
     
     # Affichage du statut
     if age > 50:
-        st.error(f"❌ Âge {age} ans dépasse la limite de 50 ans")
+        st.error(f"Âge {age} ans dépasse la limite de 50 ans")
     else:
-        st.success(f"✅ Âge {age} ans (limite : 50 ans)")
+        st.success(f"Âge {age} ans (limite : 50 ans)")
     
     # --- 3. CHAMP PERMIS (ancienneté) ---
-    st.markdown("#### 🪪 3. Permis de conduire")
+    st.markdown("#### 3. Permis de conduire")
     
     # Message d'erreur pour le permis
     if 'erreur_permis' in st.session_state and not st.session_state.form_valid:
-        st.error("⚠️ Veuillez sélectionner une date d'obtention du permis valide")
+        st.error("Veuillez sélectionner une date d'obtention du permis valide")
     
     col3, col4 = st.columns(2)
     
@@ -110,35 +109,35 @@ with st.form("formulaire_permis"):
         st.metric(
             "Ancienneté du permis",
             f"{anciennete} ans",
-            delta="Minimum 5 ans" if anciennete < 5 else "✅ OK",
+            delta="Minimum 5 ans" if anciennete < 5 else "OK",
             delta_color="inverse" if anciennete < 5 else "normal"
         )
         
         if anciennete < 5:
-            st.error(f"❌ Ancienneté {anciennete} ans inférieure à 5 ans")
+            st.error(f"Ancienneté {anciennete} ans inférieure à 5 ans")
         else:
-            st.success(f"✅ Ancienneté {anciennete} ans (minimum : 5 ans)")
+            st.success(f"Ancienneté {anciennete} ans (minimum : 5 ans)")
     
     # --- 4. CHAMP CASIER JUDICIAIRE ---
-    st.markdown("#### ⚖️ 4. Casier judiciaire")
+    st.markdown("#### 4. Casier judiciaire")
     
     # Message d'erreur pour le casier
     if 'erreur_casier' in st.session_state and not st.session_state.form_valid:
-        st.error("⚠️ Veuillez sélectionner le statut du casier judiciaire")
+        st.error("Veuillez sélectionner le statut du casier judiciaire")
     
     casier_vierge = st.radio(
         "Extrait du casier judiciaire (bulletin n°3) *",
-        options=["", "✅ Oui, mention 'Néant'", "❌ Non, comporte des mentions"],
+        options=["", "Oui, mention 'Néant'", "Non, comporte des mentions"],
         help="Doit impérativement porter la mention 'Néant'",
         index=0
     )
     
-    if casier_vierge == "✅ Oui, mention 'Néant'":
-        st.success("✅ Casier judiciaire vierge")
-    elif casier_vierge == "❌ Non, comporte des mentions":
-        st.error("❌ Casier judiciaire non vierge")
+    if casier_vierge == "Oui, mention 'Néant'":
+        st.success("Casier judiciaire vierge")
+    elif casier_vierge == "Non, comporte des mentions":
+        st.error("Casier judiciaire non vierge")
     else:
-        st.info("ℹ️ Veuillez sélectionner une option")
+        st.info("Veuillez sélectionner une option")
     
     # --- BOUTON DE SOUMISSION ---
     st.divider()
@@ -146,7 +145,7 @@ with st.form("formulaire_permis"):
     col5, col6, col7 = st.columns([1, 2, 1])
     with col6:
         submitted = st.form_submit_button(
-            "🔍 VÉRIFIER L'ÉLIGIBILITÉ",
+            "VÉRIFIER L'ÉLIGIBILITÉ",
             use_container_width=True,
             type="primary"
         )
@@ -161,13 +160,13 @@ def valider_champs(province_res, province_dem, age_val, date_permis_val, casier_
     
     # 1. Vérification des provinces
     if not province_res or province_res == "":
-        erreurs.append("❌ Veuillez sélectionner une province de résidence")
+        erreurs.append("Veuillez sélectionner une province de résidence")
         st.session_state.erreur_province = True
     else:
         st.session_state.erreur_province = False
     
     if not province_dem or province_dem == "":
-        erreurs.append("❌ Veuillez sélectionner une province demandée")
+        erreurs.append("Veuillez sélectionner une province demandée")
         st.session_state.erreur_province = True
     else:
         st.session_state.erreur_province = False
@@ -178,28 +177,28 @@ def valider_champs(province_res, province_dem, age_val, date_permis_val, casier_
     
     # 2. Vérification de l'âge
     if age_val < 18 or age_val > 75:
-        erreurs.append("❌ L'âge doit être compris entre 18 et 75 ans")
+        erreurs.append("L'âge doit être compris entre 18 et 75 ans")
         st.session_state.erreur_age = True
     else:
         st.session_state.erreur_age = False
     
     # 3. Vérification de la date du permis
     if not date_permis_val:
-        erreurs.append("❌ Veuillez sélectionner une date d'obtention du permis")
+        erreurs.append("Veuillez sélectionner une date d'obtention du permis")
         st.session_state.erreur_permis = True
     else:
         st.session_state.erreur_permis = False
     
     # 4. Vérification du casier
     if not casier_val or casier_val == "":
-        erreurs.append("❌ Veuillez sélectionner le statut du casier judiciaire")
+        erreurs.append("Veuillez sélectionner le statut du casier judiciaire")
         st.session_state.erreur_casier = True
     else:
         st.session_state.erreur_casier = False
     
     # 5. Vérification supplémentaire : âge minimum pour conduire
     if age_val < 18:
-        erreurs.append("❌ L'âge minimum pour conduire est de 18 ans")
+        erreurs.append("L'âge minimum pour conduire est de 18 ans")
     
     # 6. Vérification supplémentaire : ancienneté cohérente
     if date_permis_val:
@@ -219,7 +218,7 @@ def valider_champs(province_res, province_dem, age_val, date_permis_val, casier_
     
     if champs_vides:
         champs_str = ", ".join(champs_vides)
-        erreurs.append(f"⚠️ Veuillez remplir les champs suivants : {champs_str}")
+        erreurs.append(f"Veuillez remplir les champs suivants : {champs_str}")
     
     # Déterminer si tout est valide
     valid = len(erreurs) == 0
@@ -254,7 +253,7 @@ if submitted:
     # Si les champs ne sont pas valides, on affiche les erreurs et on arrête
     if not valid:
         st.divider()
-        st.markdown("### ⚠️ Formulaire incomplet")
+        st.markdown("### Formulaire incomplet")
         st.error("**Veuillez corriger les erreurs suivantes :**")
         
         # Affichage des erreurs
@@ -263,16 +262,16 @@ if submitted:
         
         # Aide supplémentaire
         st.markdown("---")
-        st.markdown("#### 📌 Comment corriger :")
+        st.markdown("#### Comment corriger :")
         
         if "province" in " ".join(erreurs).lower():
-            st.write("- 📍 Sélectionnez une province valide dans les listes déroulantes")
+            st.write("- Sélectionnez une province valide dans les listes déroulantes")
         if "âge" in " ".join(erreurs).lower() or "age" in " ".join(erreurs).lower():
-            st.write("- 🎂 Entrez un âge entre 18 et 75 ans")
+            st.write("- Entrez un âge entre 18 et 75 ans")
         if "permis" in " ".join(erreurs).lower() or "date" in " ".join(erreurs).lower():
-            st.write("- 🪪 Sélectionnez une date d'obtention du permis valide")
+            st.write("- Sélectionnez une date d'obtention du permis valide")
         if "casier" in " ".join(erreurs).lower():
-            st.write("- ⚖️ Sélectionnez le statut du casier judiciaire")
+            st.write("- Sélectionnez le statut du casier judiciaire")
         
         st.stop()  # Arrêter l'exécution ici
     
@@ -282,7 +281,7 @@ if submitted:
     st.session_state.erreurs = []
     
     st.divider()
-    st.markdown("### 📊 Résultat de l'évaluation")
+    st.markdown("### Résultat de l'évaluation")
     
     # --- VÉRIFICATION DES 4 CRITÈRES ---
     
@@ -296,15 +295,15 @@ if submitted:
     anciennete_ok = (anciennete >= 5)
     
     # Critère 4 : Casier vierge ?
-    casier_ok = (casier_vierge == "✅ Oui, mention 'Néant'")
+    casier_ok = (casier_vierge == "Oui, mention 'Néant'")
     
     # --- DÉCISION FINALE (TOUT DOIT ÊTRE OK) ---
     decision = (residence_ok and age_ok and anciennete_ok and casier_ok)
     
     # --- AFFICHAGE DU RÉSULTAT ---
     if decision:
-        # ✅ PERMIS ACCORDÉ
-        st.success("🎉 **PERMIS DE CONFIANCE ACCORDÉ !**")
+        # PERMIS ACCORDÉ
+        st.success("**PERMIS DE CONFIANCE ACCORDÉ !**")
         
         st.markdown("""
         Félicitations ! Le chauffeur remplit **tous les critères** requis.
@@ -316,35 +315,35 @@ if submitted:
         heure_delivrance = datetime.now().strftime("%H:%M:%S")
         
         # Affichage du numéro de permis en évidence
-        st.markdown("📜 NUMÉRO DE PERMIS")
+        st.markdown("NUMÉRO DE PERMIS")
         st.markdown(f"**{numero_permis}**")
         st.markdown(f"Délivré le {date_delivrance}")
         # --- CRITÈRES VALIDÉS ---
         st.markdown("---")
-        st.markdown("#### ✅ Critères validés :")
+        st.markdown("#### Critères validés :")
         
         col_valid1, col_valid2 = st.columns(2)
         with col_valid1:
             st.markdown(f"""
-            - ✅ Province de résidence = Province demandée  
+            - Province de résidence = Province demandée  
               *(Résidence : {province_residence} = Demandée : {province_demandee})*
-            - ✅ Âge ≤ 50 ans  
+            - Âge ≤ 50 ans  
               *({age} ans ≤ 50 ans)*
             """)
         with col_valid2:
             st.markdown(f"""
-            - ✅ Ancienneté du permis ≥ 5 ans  
+            - Ancienneté du permis ≥ 5 ans  
               *({anciennete} ans ≥ 5 ans)*
-            - ✅ Casier judiciaire vierge  
+            - Casier judiciaire vierge  
               *(Mention « Néant »)*
             """)
         
         # --- DATE ET HEURE DE DÉLIVRANCE ---
-        st.caption(f"📌 Permis délivré le {date_delivrance} à {heure_delivrance}")
-        st.info("📄 L'attestation est disponible sur demande auprès de l'administration")
+        st.caption(f"Permis délivré le {date_delivrance} à {heure_delivrance}")
+        st.info("L'attestation est disponible sur demande auprès de l'administration")
     else:
-        # ❌ PERMIS REFUSÉ
-        st.error("❌ **PERMIS DE CONFIANCE REFUSÉ**")
+        # PERMIS REFUSÉ
+        st.error("**PERMIS DE CONFIANCE REFUSÉ**")
         
         # Date et heure du refus
         date_refus = datetime.now().strftime("%d/%m/%Y")
@@ -354,45 +353,45 @@ if submitted:
         motifs = []
         
         if not residence_ok:
-            motifs.append(f"❌ Province de résidence ({province_residence}) différente de la province demandée ({province_demandee})")
+            motifs.append(f"Province de résidence ({province_residence}) différente de la province demandée ({province_demandee})")
         
         if not age_ok:
-            motifs.append(f"❌ Âge ({age} ans) supérieur à 50 ans")
+            motifs.append(f"Âge ({age} ans) supérieur à 50 ans")
         
         if not anciennete_ok:
-            motifs.append(f"❌ Ancienneté du permis ({anciennete} ans) inférieure à 5 ans")
+            motifs.append(f"Ancienneté du permis ({anciennete} ans) inférieure à 5 ans")
         
         if not casier_ok:
-            motifs.append("❌ Casier judiciaire non vierge")
+            motifs.append("Casier judiciaire non vierge")
         
         # Affichage des motifs
-        st.markdown("#### 🚫 Motifs du refus :")
+        st.markdown("#### Motifs du refus :")
         for i, motif in enumerate(motifs, 1):
             st.write(f"{i}. {motif}")
         
         # --- RECOMMANDATIONS ---
-        st.markdown("#### 💡 Recommandations :")
+        st.markdown("#### Recommandations :")
         
         if not age_ok:
-            st.write(f"- ⏳ Attendre d'avoir **50 ans ou moins** (actuellement {age} ans)")
+            st.write(f"- Attendre d'avoir **50 ans ou moins** (actuellement {age} ans)")
         
         if not anciennete_ok:
-            st.write(f"- ⏳ Attendre **{5 - anciennete} ans** supplémentaires pour atteindre 5 ans d'ancienneté")
+            st.write(f"- Attendre **{5 - anciennete} ans** supplémentaires pour atteindre 5 ans d'ancienneté")
         
         if not residence_ok:
-            st.write(f"- 📍 Faire la demande dans **{province_residence}** ou déménager à **{province_demandee}**")
+            st.write(f"- Faire la demande dans **{province_residence}** ou déménager à **{province_demandee}**")
         
         if not casier_ok:
-            st.write("- ⚖️ Régulariser la situation judiciaire avant de refaire la demande")
+            st.write("- Régulariser la situation judiciaire avant de refaire la demande")
         
         # --- NUMÉRO DE DOSSIER DE REFUS ---
         numero_dossier = f"REF-{datetime.now().strftime('%Y%m%d')}-{random.randint(100, 999)}"
-        st.warning(f"📋 Numéro de dossier de refus : {numero_dossier}")
-        st.caption(f"📌 Décision prise le {date_refus} à {heure_refus}")
+        st.warning(f"Numéro de dossier de refus : {numero_dossier}")
+        st.caption(f"Décision prise le {date_refus} à {heure_refus}")
     
     # --- AFFICHAGE DU TABLEAU RÉCAPITULATIF ---
     st.divider()
-    with st.expander("📋 Voir le récapitulatif détaillé"):
+    with st.expander("Voir le récapitulatif détaillé"):
         
         # Création des données pour le tableau
         tableau = {
@@ -412,11 +411,11 @@ if submitted:
                 "Mention 'Néant'"
             ],
             "Statut": [
-                "✅ OK" if residence_ok else "❌ KO",
-                "✅ OK" if province_demandee == province_residence else "❌ KO",
-                "✅ OK" if age_ok else "❌ KO",
-                "✅ OK" if anciennete_ok else "❌ KO",
-                "✅ OK" if casier_ok else "❌ KO"
+                "OK" if residence_ok else "KO",
+                "OK" if province_demandee == province_residence else "KO",
+                "OK" if age_ok else "KO",
+                "OK" if anciennete_ok else "KO",
+                "OK" if casier_ok else "KO"
             ]
         }
         
@@ -428,7 +427,7 @@ if submitted:
         with col_t2:
             st.metric(
                 "Décision finale",
-                "✅ ACCORDÉ" if decision else "❌ REFUSÉ",
+                "ACCORDÉ" if decision else "REFUSÉ",
                 delta="Tous les critères sont remplis" if decision else "Au moins un critère non rempli",
                 delta_color="normal" if decision else "inverse"
             )
@@ -445,10 +444,10 @@ with st.sidebar:
     st.divider()
     st.success("Système automatisé de décision")
     st.info("Version prototype - Stage d'initiation")
-    st.metric("📊 Simulations effectuées", st.session_state.nb_tests)
-    st.caption(f"🕐 {datetime.now().strftime('%H:%M:%S')}")
+    st.metric("Simulations effectuées", st.session_state.nb_tests)
+    st.caption(f"{datetime.now().strftime('%H:%M:%S')}")
     
-    if st.button("🔄 Réinitialiser les statistiques"):
+    if st.button("Réinitialiser les statistiques"):
         st.session_state.nb_tests = 0
         st.rerun()
 
@@ -462,21 +461,21 @@ def charger_dataset():
         df = pd.read_csv("dataset_permis_confiance.csv", encoding='utf-8')
         return df
     except FileNotFoundError:
-        st.warning("⚠️ Fichier 'dataset_permis_confiance.csv' non trouvé")
+        st.warning("Fichier 'dataset_permis_confiance.csv' non trouvé")
         return None
     except Exception as e:
-        st.error(f"❌ Erreur lors du chargement : {e}")
+        st.error(f"Erreur lors du chargement : {e}")
         return None
 
 # --- AFFICHAGE DU DATASET ---
 st.divider()
-st.header("📊 Visualisation du dataset")
+st.header("Visualisation du dataset")
 
 df = charger_dataset()
 
 if df is not None:
     # --- FILTRES ---
-    st.subheader("🔍 Filtrer les données")
+    st.subheader("Filtrer les données")
     
     col_f1, col_f2, col_f3, col_f4 = st.columns(4)
     
@@ -484,7 +483,7 @@ if df is not None:
         decision_filter = st.multiselect(
             "Décision",
             options=[1, 0],
-            format_func=lambda x: "✅ Accordé" if x == 1 else "❌ Refusé",
+            format_func=lambda x: "Accordé" if x == 1 else "Refusé",
             default=[1, 0]
         )
     
@@ -510,7 +509,7 @@ if df is not None:
         casier_filter = st.multiselect(
             "Casier judiciaire",
             options=[1, 0],
-            format_func=lambda x: "✅ Vierge" if x == 1 else "❌ Non vierge",
+            format_func=lambda x: "Vierge" if x == 1 else "Non vierge",
             default=[1, 0]
         )
     
@@ -525,7 +524,7 @@ if df is not None:
     st.divider()
     
     # --- AFFICHAGE DES DONNÉES ---
-    st.subheader(f"📋 Données ({len(df_filtre)} lignes)")
+    st.subheader(f"Données ({len(df_filtre)} lignes)")
     
     st.dataframe(
         df_filtre,
@@ -536,7 +535,7 @@ if df is not None:
     # --- BOUTON DE TÉLÉCHARGEMENT ---
     csv = df_filtre.to_csv(index=False).encode('utf-8')
     st.download_button(
-        label="📥 Télécharger le CSV filtré",
+        label="Télécharger le CSV filtré",
         data=csv,
         file_name="dataset_filtre.csv",
         mime="text/csv",
@@ -544,14 +543,12 @@ if df is not None:
     )
 
 else:
-    st.info("💡 Aucun dataset chargé. Générez d'abord le fichier dataset_permis_confiance.csv")
-    
+    st.info("Aucun dataset chargé. Générez d'abord le fichier dataset_permis_confiance.csv")
+
 # STATISTIQUES SIMPLES
 
 st.divider()
-st.header("📈 Statistiques du dataset")
-
-df = charger_dataset()
+st.header("Statistiques du dataset")
 
 if df is not None:
     # --- STATISTIQUES GLOBALES ---
@@ -559,7 +556,7 @@ if df is not None:
     
     with col_s1:
         st.metric(
-            "📊 Nombre total de demandes",
+            "Nombre total de demandes",
             len(df)
         )
     
@@ -567,7 +564,7 @@ if df is not None:
         nb_acceptes = df[df['decision'] == 1].shape[0]
         taux_acceptation = (nb_acceptes / len(df)) * 100
         st.metric(
-            "✅ Taux d'acceptation",
+            "Taux d'acceptation",
             f"{taux_acceptation:.1f}%",
             delta=f"{nb_acceptes} acceptés"
         )
@@ -575,7 +572,7 @@ if df is not None:
     with col_s3:
         nb_refuses = df[df['decision'] == 0].shape[0]
         st.metric(
-            "❌ Taux de refus",
+            "Taux de refus",
             f"{(nb_refuses / len(df)) * 100:.1f}%",
             delta=f"{nb_refuses} refusés",
             delta_color="inverse"
@@ -584,7 +581,7 @@ if df is not None:
     st.divider()
     
     # --- COMPARAISON ACCEPTÉS / REFUSÉS ---
-    st.subheader("📊 Comparaison Acceptés vs Refusés")
+    st.subheader("Comparaison Acceptés vs Refusés")
     
     # Création des données pour le graphique
     col_c1, col_c2 = st.columns(2)
@@ -594,27 +591,20 @@ if df is not None:
         st.markdown(f"""
         | Statut | Nombre | Pourcentage |
         |--------|--------|-------------|
-        | ✅ Acceptés | **{nb_acceptes}** | **{taux_acceptation:.1f}%** |
-        | ❌ Refusés | **{nb_refuses}** | **{(nb_refuses/len(df))*100:.1f}%** |
+        | Acceptés | **{nb_acceptes}** | **{taux_acceptation:.1f}%** |
+        | Refusés | **{nb_refuses}** | **{(nb_refuses/len(df))*100:.1f}%** |
         | **Total** | **{len(df)}** | **100%** |
         """)
     
     with col_c2:
         # Graphique à barres
         chart_data = pd.DataFrame({
-            'Statut': ['✅ Acceptés', '❌ Refusés'],
+            'Statut': ['Acceptés', 'Refusés'],
             'Nombre': [nb_acceptes, nb_refuses]
         })
         st.bar_chart(chart_data.set_index('Statut'), use_container_width=True)
     
     st.divider()
-    # ============================================
-# GRAPHIQUES - À AJOUTER DANS LA SECTION STATISTIQUES
-# ============================================
-
-# --- IMPORT DE PLOTLY ---
-import plotly.express as px
-import plotly.graph_objects as go
 
 # --- CRÉATION DES DONNÉES ---
 if df is not None:
@@ -623,18 +613,18 @@ if df is not None:
     taux_acceptation = (nb_acceptes / len(df)) * 100
     
     st.divider()
-    st.subheader("📊 Visualisation graphique")
+    st.subheader("Visualisation graphique")
     
     # --- COLONNES POUR LES 2 GRAPHIQUES ---
     col_g1, col_g2 = st.columns(2)
     
     # --- GRAPHIQUE 1 : BAR CHART ---
     with col_g1:
-        st.markdown("#### 📊 Bar Chart")
+        st.markdown("#### Bar Chart")
         
         # Création du dataframe pour le graphique
         df_bar = pd.DataFrame({
-            'Statut': ['✅ Acceptés', '❌ Refusés'],
+            'Statut': ['Acceptés', 'Refusés'],
             'Nombre': [nb_acceptes, nb_refuses],
             'Pourcentage': [taux_acceptation, 100 - taux_acceptation]
         })
@@ -647,8 +637,8 @@ if df is not None:
             text='Nombre',
             color='Statut',
             color_discrete_map={
-                '✅ Acceptés': '#4CAF50',
-                '❌ Refusés': '#FF4444'
+                'Acceptés': '#4CAF50',
+                'Refusés': '#FF4444'
             },
             title=f'Total : {len(df)} demandes - Taux d\'acceptation : {taux_acceptation:.1f}%',
             labels={'Nombre': 'Nombre de demandes', 'Statut': 'Décision'}
@@ -676,11 +666,11 @@ if df is not None:
     
     # --- GRAPHIQUE 2 : PIE CHART ---
     with col_g2:
-        st.markdown("#### 🥧 Pie Chart")
+        st.markdown("#### Pie Chart")
         
         # Création du dataframe pour le graphique
         df_pie = pd.DataFrame({
-            'Statut': ['✅ Acceptés', '❌ Refusés'],
+            'Statut': ['Acceptés', 'Refusés'],
             'Nombre': [nb_acceptes, nb_refuses]
         })
         
@@ -692,8 +682,8 @@ if df is not None:
             title=f'Répartition des décisions',
             color='Statut',
             color_discrete_map={
-                '✅ Acceptés': '#4CAF50',
-                '❌ Refusés': '#FF4444'
+                'Acceptés': '#4CAF50',
+                'Refusés': '#FF4444'
             },
             hole=0.3  # Donut chart
         )
@@ -721,13 +711,13 @@ if df is not None:
         st.plotly_chart(fig_pie, use_container_width=True)
     
     # --- GRAPHIQUE 3 : BAR CHART HORIZONTAL (optionnel) ---
-    with st.expander("📊 Voir le graphique horizontal"):
+    with st.expander("Voir le graphique horizontal"):
         st.markdown("#### Bar Chart Horizontal")
         
         fig_hbar = go.Figure(data=[
             go.Bar(
                 x=[nb_acceptes],
-                y=['✅ Acceptés'],
+                y=['Acceptés'],
                 orientation='h',
                 marker_color='#4CAF50',
                 text=[f'{nb_acceptes} ({taux_acceptation:.1f}%)'],
@@ -735,7 +725,7 @@ if df is not None:
             ),
             go.Bar(
                 x=[nb_refuses],
-                y=['❌ Refusés'],
+                y=['Refusés'],
                 orientation='h',
                 marker_color='#FF4444',
                 text=[f'{nb_refuses} ({(100-taux_acceptation):.1f}%)'],
@@ -760,11 +750,11 @@ if df is not None:
     anciennete_moyenne = df['anciennete_permis'].mean()
 
     # Afficher en plus
-    st.metric("📅 Âge moyen acceptés", f"{age_moyen_acceptes:.1f} ans")
-    st.metric("📅 Âge moyen refusés", f"{age_moyen_refuses:.1f} ans")
-    st.metric("🪪 Ancienneté moyenne", f"{anciennete_moyenne:.1f} ans")
+    st.metric("Âge moyen acceptés", f"{age_moyen_acceptes:.1f} ans")
+    st.metric("Âge moyen refusés", f"{age_moyen_refuses:.1f} ans")
+    st.metric("Ancienneté moyenne", f"{anciennete_moyenne:.1f} ans")
     # --- RÉPARTITION PAR PROVINCE (optionnel) ---
-    with st.expander("📍 Voir la répartition par province"):
+    with st.expander("Voir la répartition par province"):
         df_province = df.groupby('province_residence').agg(
             Total=('decision', 'count'),
             Acceptes=('decision', lambda x: (x == 1).sum()),
@@ -774,10 +764,10 @@ if df is not None:
         st.dataframe(df_province, use_container_width=True)
 
 else:
-    st.info("💡 Aucun dataset chargé. Générez d'abord le fichier dataset_permis_confiance.csv")
-    
+    st.info("Aucun dataset chargé. Générez d'abord le fichier dataset_permis_confiance.csv")
+
 # --- PIED DE PAGE ---
 st.divider()
-st.caption("🚖 Prototype de démonstration - Données fictives - Non contractuel")
-st.caption("🔐 Aucune donnée personnelle n'est stockée")
-st.caption(f"🕐 {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+st.caption("Prototype de démonstration - Données fictives - Non contractuel")
+st.caption("Aucune donnée personnelle n'est stockée")
+st.caption(f"{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
